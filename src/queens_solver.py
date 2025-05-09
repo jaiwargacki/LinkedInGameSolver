@@ -2,7 +2,7 @@ import math
 from backtracker import solve
 
 LINKED_IN_COLORS = ['#bb9ae9', '#f2cf89', '#f2cf89', '#b9e495', '#dfdfdf', '#e9815d', '#e9815d', '#b6b49b']
-PRINTABLE_COLORS = ['31', '32', '33', '34', '35', '36', '37', '93', '94', '95', '96']
+PRINTABLE_COLORS = ['31', '32', '33', '34', '35', '36', '37', '95', '96']
 
 def get_grid_size():
     try:
