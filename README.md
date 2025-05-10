@@ -11,7 +11,9 @@ Start by running `python3 solver.py --game queens`. You are then prompted to ent
 ![Queens Demo](assets/queensDemo.png)
 
 ### Tango
-[Not complete]
+Start by running `python3 solver.py --game tango`. You are then prompted to enter the starting Moons (M) and Suns (S) along with all of the rules (X or =). The expected notation is the symbol followed by the location. For rules you enter the two relevant locations. Whitespace in the notation is ignored. A grid with position notation is provided to aid in mapping the positions. The starting state is all entered in the same input. 
+
+![Tango Demo](assets/tangoDemo.png)
 
 ### Pinpoint
 [Not complete]
@@ -21,7 +23,6 @@ Start by running `python3 solver.py --game queens`. You are then prompted to ent
 
 ## Future Work
 - [ ] Zip initial functionality
-- [ ] Tango initial functionality
 - [ ] Pinpoint initial functionality
 - [ ] Crossclimb initial functionality
 - [ ] Improved entry of game state to program

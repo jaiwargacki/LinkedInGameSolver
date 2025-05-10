@@ -150,15 +150,15 @@ def extract_position(user_input, offset):
 
 def get_starting_configuration():
     print("Enter the starting configuration for the Tango game.")
-    print("For Moon and Sun, use 'M' and 'S' followed by their positions (e.g., 'M 1A' or 'S 2B').")
-    print("For X and =, use 'X' and '=' followed by their two positions (e.g., 'X 1A 1B' or '= 2C 3C').\n")
+    print("For Moon and Sun, use 'M' and 'S' followed by their positions (e.g., 'M A1' or 'S B2').")
+    print("For X and =, use 'X' and '=' followed by their two positions (e.g., 'X A1 B1' or '= C2 C3').\n")
     
     for row in range(1, GRID_SIZE + 1):
         for col in range(1, GRID_SIZE + 1):
             print(f"{chr(64 + row)}{col}", end=" ")
         print()
     
-    print("\nFor example, 'M 1A S 2B X 1A 1B = 2C 3C'.\n")
+    print("\nFor example, 'M A1 S A3 M A5 S B2 S C1 M C3 M C5 S E1 M E2 S E3 X B4 B5 = B5 B6 X D5 E5 X E4 E5 = E5 E6 X E5 F5'.\n")
     user_input = input("Enter the configuration: ").strip().replace(" ", "").upper()
 
     index = 0
