@@ -1,5 +1,6 @@
 import copy
 from backtracker import solve
+from shared import Position, extract_position
 
 GRID_SIZE = 6
 
@@ -7,14 +8,6 @@ MOON = 'M'
 SUN = 'S'
 CROSS = 'X'
 EQUAL = '='
-
-class Position:
-    def __init__(self, row, col):
-        self.row = row
-        self.col = col
-
-    def __repr__(self):
-        return f"Position({self.row}, {self.col})"
 
 class Rule:
     def __init__(self, position1, position2, rule_type):
@@ -141,12 +134,6 @@ class Configuration:
                 if self.squares[row][col] is None:
                     return False
         return True 
-
-def extract_position(user_input, offset):
-    position_str = user_input[offset:offset + 2]
-    if len(position_str) != 2:
-        raise "Invalid input. Please try again."
-    return Position(ord(position_str[0]) - 65, int(position_str[1]) - 1)
 
 def get_starting_configuration():
     print("Enter the starting configuration for the Tango game.")
