@@ -6,7 +6,7 @@ Currently commandline based, this repo provides solvers for the daily LinkedIn g
 [Not complete]
 
 ### Queens
-Start by running `python3 solver.py --game queens`. You are then prompted to enter the board size followed by each row of the game board (the starting colors). This can be done with any 1 character code for each color. For example (1, 2, 3, ...) or (R, B, G, ...). The program then displays the entered board and solves.
+Start by running `python3 solver.py --game queens`. This runs selenium script which retrieves the current game board for queens. After retrieving the puzzle the backtracking algorithm solves the loaded game board.
 
 ![Queens Demo](assets/queensDemo.png)
 
@@ -25,4 +25,3 @@ Start by running `python3 solver.py --game tango`. You are then prompted to ente
 - [ ] Zip initial functionality
 - [ ] Pinpoint initial functionality
 - [ ] Crossclimb initial functionality
-- [ ] Improved entry of game state to program

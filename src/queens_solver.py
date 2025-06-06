@@ -1,34 +1,59 @@
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
+import time
+
 import math
 from backtracker import solve
 
-LINKED_IN_COLORS = ['#bb9ae9', '#f2cf89', '#f2cf89', '#b9e495', '#dfdfdf', '#e9815d', '#e9815d', '#b6b49b']
-PRINTABLE_COLORS = ['31', '32', '33', '34', '35', '36', '37', '95', '96']
+LINKED_IN_COLORS = ['#bba3e2', '#ffc992', '#96beff', '#b3dfa0', '#dfdfdf', '#ff7b60', '#e6f388', '#dfa0bf', '#a3d2d8', '#62efea', '#ff93f3', '#8acc6d', '#729aec', '#c387e0', '#ffe04b']
 
-def get_grid_size():
-    try:
-        size = int(input("Enter the size of the grid (N): "))
-        if size <= 0:
-            raise ValueError("Size must be a positive integer.")
-        return size
-    except ValueError as e:
-        print(f"Invalid input: {e}")
-        return get_grid_size()
+def get_printable_colors():
+    printable_colors = []
+    for color in LINKED_IN_COLORS:
+        r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+        printable_colors.append(f"38;2;{r};{g};{b}")
+    return printable_colors
 
-def get_colors(grid_size):
-    print('Enter the colors for each column in the row and then press enter. Use the same one (1) character for each color.', end='\n')
+PRINTABLE_COLORS = get_printable_colors()
+
+QUEENS_URL = "https://www.linkedin.com/games/view/queens/desktop/"
+START_BUTTON_ID = "launch-footer-start-button"
+QUEEN_GRID_ID = "queens-grid"
+
+def scrape_linked_in() -> tuple[int, list[str]]:
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+    driver.get(QUEENS_URL)
+    time.sleep(1)
+    start_button = driver.find_element("id", START_BUTTON_ID)
+    start_button.click()
+    time.sleep(1)
+    board_element = driver.find_element("id", QUEEN_GRID_ID)
+    divs = board_element.find_elements("tag name", "div")
+    color_map = dict()
     colors = []
-    color_key = {}
-    for i in range(grid_size):
-        color = input(f"Enter color for column {i + 1}: ")
-        if len(color) != grid_size:
-            print(f"Invalid input: Each row must be {grid_size} characters long.")
-            print("Please enter the colors again.")
-            return get_colors(grid_size)
-        for character in color:
-            if character not in color_key:
-                color_key[character] = len(color_key) + 1
-            colors.append(color_key[character])
-    return colors
+    for i, div in enumerate(divs):
+        label = div.get_attribute("aria-label")
+        if label is None:
+            continue
+
+        elements = label.split(", ")
+        color = elements[0].split('color ')[1]
+        row = elements[1].replace('row ', '')
+        col = elements[2].replace('column ', '')
+
+        if color not in color_map:
+            color_map[color] = len(color_map) + 1
+        colors.append(color_map[color])
+
+    driver.quit()
+    grid_size = int(math.sqrt(len(colors)))
+    if grid_size * grid_size != len(colors):
+        raise ValueError("The number of colors does not form a perfect square grid.")
+    return grid_size, colors
 
 class Configuration:
     def __init__(self, grid_size, colors, queens=None, color_key=None, next_queen_row=0):
@@ -139,8 +164,7 @@ class Configuration:
         return count
 
 def solve_queens():
-    grid_size = get_grid_size()
-    colors = get_colors(grid_size)
+    grid_size, colors = scrape_linked_in()
 
     configuration = Configuration(grid_size, colors)
     print("\nInitial configuration:")
