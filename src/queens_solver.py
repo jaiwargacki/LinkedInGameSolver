@@ -32,10 +32,7 @@ def scrape_linked_in() -> tuple[int, list[str]]:
         if label is None:
             continue
 
-        elements = label.split(", ")
-        color = elements[0].split('color ')[1]
-        row = elements[1].replace('row ', '')
-        col = elements[2].replace('column ', '')
+        color = label.split(", ")[0].split('color ')[1]
 
         if color not in color_map:
             color_map[color] = len(color_map) + 1
