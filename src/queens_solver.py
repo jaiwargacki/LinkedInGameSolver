@@ -5,6 +5,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 import time
 
 import math
+from selenium_scraper import Connection
 from backtracker import solve
 
 LINKED_IN_COLORS = ['#bba3e2', '#ffc992', '#96beff', '#b3dfa0', '#dfdfdf', '#ff7b60', '#e6f388', '#dfa0bf', '#a3d2d8', '#62efea', '#ff93f3', '#8acc6d', '#729aec', '#c387e0', '#ffe04b']
@@ -23,19 +24,10 @@ START_BUTTON_ID = "launch-footer-start-button"
 QUEEN_GRID_ID = "queens-grid"
 
 def scrape_linked_in() -> tuple[int, list[str]]:
-    options = Options()
-    options.add_argument("--headless")
-    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-    driver.get(QUEENS_URL)
-    time.sleep(1)
-    start_button = driver.find_element("id", START_BUTTON_ID)
-    start_button.click()
-    time.sleep(1)
-    board_element = driver.find_element("id", QUEEN_GRID_ID)
-    divs = board_element.find_elements("tag name", "div")
+    connection = Connection(QUEENS_URL, START_BUTTON_ID, QUEEN_GRID_ID).open()
     color_map = dict()
     colors = []
-    for i, div in enumerate(divs):
+    for i, div in connection.get_game_elements():
         label = div.get_attribute("aria-label")
         if label is None:
             continue
@@ -48,8 +40,7 @@ def scrape_linked_in() -> tuple[int, list[str]]:
         if color not in color_map:
             color_map[color] = len(color_map) + 1
         colors.append(color_map[color])
-
-    driver.quit()
+    connection.close()
     grid_size = int(math.sqrt(len(colors)))
     if grid_size * grid_size != len(colors):
         raise ValueError("The number of colors does not form a perfect square grid.")
