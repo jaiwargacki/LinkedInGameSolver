@@ -24,7 +24,7 @@ class Connection:
 
     def get_game_elements(self):
         board_element = self.driver.find_element("id", self.game_element_id)
-        divs = board_element.find_elements("tag name", "div")
+        divs = board_element.find_elements("css selector", ":scope > div")
         return enumerate(divs)
 
     def close(self):
