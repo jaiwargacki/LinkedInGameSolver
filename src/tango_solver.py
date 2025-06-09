@@ -28,7 +28,7 @@ class Rule:
         return True
 
 class Configuration:
-    def __init__(self, squares=None, rules=None, prev_row=0, prev_col=0):
+    def __init__(self, squares=None, rules=None, prev_row=-1, prev_col=-1):
         self.squares = squares if squares else [[None for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
         self.rules = rules if rules else []
         self.prev_row = prev_row
@@ -78,12 +78,6 @@ class Configuration:
             return next_row, next_col
         else:
             return self.get_next_row_col(next_row, next_col)
-
-    def new_configuration(self, next_row, next_col, symbol):
-        next_moon = Configuration(copy.deepcopy(self.squares), self.rules, next_row, next_col)
-        next_moon.make_move(Position(next_row, next_col), MOON)
-        if next_moon.is_valid():
-            result.append(next_moon)
 
     def __str__(self):
         result = ""
