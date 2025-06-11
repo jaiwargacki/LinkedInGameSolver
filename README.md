@@ -1,27 +1,28 @@
 # LinkedIn Game Solver
-Currently commandline based, this repo provides solvers for the daily LinkedIn games. Didn't know LinkedIn had daily games? Me neither.. 
+This repo provides functionality to reach out to LinkedIn for today's game and solves. Didn't know LinkedIn had daily games? Me neither.. 
 
-## The Games
-### Zip
-[Not complete]
+🟥🟥🟥🟧🟦🟩🟩🟩 \
+🟥🟧🟧🟧🟦🟩🟦🟩 &emsp; &emsp; &emsp;☀️ 🌙 🌙 ☀️ ☀️ 🌙 \
+🟥🟥🟥🟧🟦🟩🟦🟩 &emsp; &emsp; &emsp;☀️ 🌙 🌙 ☀️ ☀️ 🌙 \
+🟦🟦🟦🟦🟦🟦🟦🟦 &emsp; &emsp; &emsp;🌙 ☀️ ☀️ 🌙 🌙 ☀️ \
+🟦⬜🟦🟦🟦🟦🟦🟦 &emsp; &emsp; &emsp;☀️ 🌙 ☀️ 🌙 🌙 ☀️ \
+🟪⬜🟪🟦🟦🟨🟨🟨 &emsp; &emsp; &emsp;🌙 ☀️ 🌙 ☀️ ☀️ 🌙 \
+🟪⬜🟪🟦🟦⬜⬜🟨 &emsp; &emsp; &emsp;🌙 ☀️ ☀️ 🌙 🌙 ☀️ \
+🟪🟪🟪🟦🟦🟨🟨🟨
 
-### Queens
-`python3 solver.py --game queens`.
+### Usage
+```
+usage: solver.py [-h] --game {zip,queens,tango,pinpoint,crossclimb}
+Solve LinkedIn Game
 
-![Queens Demo](assets/queensDemo.png)
+options:
+  -h, --help            show this help message and exit
+  --game {zip,queens,tango,pinpoint,crossclimb}
+      The game to solve. Options: 'zip', 'queens',` `'tango',
+      'pinpoint', or 'crossclimb'.
+```
 
-### Tango
-`python3 solver.py --game tango`.
-
-![Tango Demo](assets/tangoDemo.png)
-
-### Pinpoint
-[Not complete]
-
-### Crossclimb
-[Not complete]
-
-## Future Work
-- [ ] Zip initial functionality
-- [ ] Pinpoint initial functionality
-- [ ] Crossclimb initial functionality
+## To be completed..
+- [ ] Zip functionality
+- [ ] Pinpoint functionality
+- [ ] Crossclimb functionality
