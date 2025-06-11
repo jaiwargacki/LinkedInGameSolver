@@ -5,10 +5,10 @@ from webdriver_manager.firefox import GeckoDriverManager
 import time
 
 class Connection:
-    def __init__(self, url, start_button_id, game_element_id):
+    def __init__(self, url, start_button_id, game_element_class):
         self.url = url
         self.start_button_id = start_button_id
-        self.game_element_id = game_element_id
+        self.game_element_class = game_element_class
         self.driver = None
 
     def open(self):
@@ -23,7 +23,7 @@ class Connection:
         return self
 
     def get_game_elements(self):
-        board_element = self.driver.find_element("id", self.game_element_id)
+        board_element = self.driver.find_element("class name", self.game_element_class)
         divs = board_element.find_elements("css selector", ":scope > div")
         return enumerate(divs)
 

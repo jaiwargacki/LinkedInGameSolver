@@ -1,9 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.firefox import GeckoDriverManager
-import time
-
 import math
 from selenium_scraper import Connection
 from backtracker import solve
@@ -21,10 +15,10 @@ PRINTABLE_COLORS = get_printable_colors()
 
 QUEENS_URL = "https://www.linkedin.com/games/view/queens/desktop/"
 START_BUTTON_ID = "launch-footer-start-button"
-QUEEN_GRID_ID = "queens-grid"
+QUEEN_GRID_CLASS = "queens-grid-no-gap"
 
 def scrape_linked_in() -> tuple[int, list[str]]:
-    connection = Connection(QUEENS_URL, START_BUTTON_ID, QUEEN_GRID_ID).open()
+    connection = Connection(QUEENS_URL, START_BUTTON_ID, QUEEN_GRID_CLASS).open()
     color_map = dict()
     colors = []
     for i, div in connection.get_game_elements():
