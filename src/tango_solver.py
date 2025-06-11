@@ -1,13 +1,17 @@
 import copy
+from selenium_scraper import Connection
+from selenium.webdriver.common.by import By
 from backtracker import solve
 from shared import Position, extract_position
 
+TANGO_URL = 'https://www.linkedin.com/games/view/tango/desktop'
+TANGO_GRID_CLASS = "lotka-grid"
 GRID_SIZE = 6
 
-MOON = 'M'
-SUN = 'S'
-CROSS = 'X'
-EQUAL = '='
+MOON = 'Moon'
+SUN = 'Sun'
+CROSS = 'Cross'
+EQUAL = 'Equal'
 
 class Rule:
     def __init__(self, position1, position2, rule_type):
@@ -129,41 +133,40 @@ class Configuration:
                     return False
         return True 
 
-def get_starting_configuration():
-    print("Enter the starting configuration for the Tango game.")
-    print("For Moon and Sun, use 'M' and 'S' followed by their positions (e.g., 'M A1' or 'S B2').")
-    print("For X and =, use 'X' and '=' followed by their two positions (e.g., 'X A1 B1' or '= C2 C3').\n")
-    
-    for row in range(1, GRID_SIZE + 1):
-        for col in range(1, GRID_SIZE + 1):
-            print(f"{chr(64 + row)}{col}", end=" ")
-        print()
-    
-    print("\nFor example, 'M A1 S A3 M A5 S B2 S C1 M C3 M C5 S E1 M E2 S E3 X B4 B5 = B5 B6 X D5 E5 X E4 E5 = E5 E6 X E5 F5'.\n")
-    user_input = input("Enter the configuration: ").strip().replace(" ", "").upper()
+def scrape_linked_in() -> Configuration:
+    connection = Connection(TANGO_URL, TANGO_GRID_CLASS).open()
 
-    index = 0
     configuration = Configuration()
-    while index < len(user_input):
-        try:
-            index_increment = 1
-            if user_input[index] == MOON or user_input[index] == SUN:
-                configuration.make_move(extract_position(user_input, index + 1), user_input[index])
-                index_increment += 2
-            elif user_input[index] == CROSS or user_input[index] == EQUAL:
-                configuration.add_rule(Rule(extract_position(user_input, index + 1), extract_position(user_input, index + 3), user_input[index]))
-                index_increment += 4
-            else:
-                print("Invalid input. Please try again.")
-                return None
-            index += index_increment
-        except IndexError:
-            print("Invalid input. Please try again.")
-            return None
+    row = 0
+    col = 0
+    for i, div in connection.get_game_elements():
+        titles = div.find_elements(By.TAG_NAME, 'title')
+        if titles:
+            symbol = titles[0].get_attribute('innerHTML').strip()
+            if symbol in [MOON, SUN]:
+                configuration.make_move(Position(row, col), symbol)
+
+        right_edges = div.find_elements(By.CLASS_NAME, 'lotka-cell-edge--right')
+        down_edges = div.find_elements(By.CLASS_NAME, 'lotka-cell-edge--down')
+
+        if right_edges:
+            element = right_edges[0].find_element(By.TAG_NAME, 'svg').get_attribute('aria-label')
+            configuration.add_rule(Rule(Position(row, col), Position(row, col + 1), element))
+        if down_edges:
+            element = down_edges[0].find_element(By.TAG_NAME, 'svg').get_attribute('aria-label')
+            configuration.add_rule(Rule(Position(row, col), Position(row + 1, col), element))
+
+        col += 1
+        if col >= GRID_SIZE:
+            col = 0
+            row += 1
+
+    connection.close()
     return configuration
+    
 
 def solve_tango():
-    configuration = get_starting_configuration()
+    configuration = scrape_linked_in()
     if configuration is None:
         return
     print("Starting configuration:")
