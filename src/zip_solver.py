@@ -14,10 +14,6 @@ NEW_LINE_CHAR = '\n'
 PATH_CHAR = '■'
 WALL_LEFT_RIGHT = '|'
 WALL_TOP_BOTTOM = '—'
-UP = '↑'
-DOWN = '↓'
-LEFT = '←'
-RIGHT = '→'
 
 class Configuration:
     def __init__(self, grid_size):
@@ -73,7 +69,8 @@ class Configuration:
                 if right_position:
                     right_char = SPACE_CHAR
                     if self.adjacency_matrix[index][index + 1] == 1 \
-                            and abs((self.path.index(current_position) if current_position in self.path else -1) - (self.path.index(right_position) if right_position in self.path else -1)) == 1:
+                            and abs((self.path.index(current_position) if current_position in self.path else -1) \
+                            - (self.path.index(right_position) if right_position in self.path else -1)) == 1:
                         right_char = PATH_CHAR
                     elif self.adjacency_matrix[index][index + 1] == 0:
                         right_char = WALL_LEFT_RIGHT
@@ -83,23 +80,16 @@ class Configuration:
                 result += NEW_LINE_CHAR
                 for col in range(self.grid_size):
                     index = row * self.grid_size + col
+                    next_char = SPACE_CHAR
+                    current_position = Position(row, col)
+                    down_position = Position(row + 1, col) if row < self.grid_size - 1 else None
                     if self.adjacency_matrix[index][index + self.grid_size] == 0:
-                        result += SPACE_CHAR + WALL_TOP_BOTTOM
-                    else:
-                        result += SPACE_CHAR + SPACE_CHAR
-                    result += SPACE_CHAR + SPACE_CHAR
+                        next_char = WALL_TOP_BOTTOM
+                    elif abs((self.path.index(current_position) if current_position in self.path else -1) \
+                            - (self.path.index(down_position) if down_position in self.path else -1)) == 1:
+                        next_char = PATH_CHAR
+                    result += next_char + (SPACE_CHAR * 3)
             result += NEW_LINE_CHAR
-
-        for i in range(1, len(self.path)):
-            if self.path[i].col == self.path[i - 1].col:
-                symbol = DOWN if self.path[i].row == self.path[i - 1].row + 1 else UP
-                lines = result.split(NEW_LINE_CHAR)
-                line_index = (self.path[i].row * 2) + (1 if symbol == UP else -1)
-                char_index = self.path[i].col * 4
-                new_line = lines[line_index][:char_index] + PATH_CHAR + lines[line_index][char_index + 1:]
-                lines[line_index] = new_line
-                result = NEW_LINE_CHAR.join(lines)
-
         return result
 
     def next_configuration_helper(self, new_location):
