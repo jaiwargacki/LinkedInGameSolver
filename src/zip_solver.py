@@ -1,5 +1,4 @@
 import copy
-import re
 from selenium_scraper import Connection
 from selenium.webdriver.common.by import By
 from backtracker import solve
@@ -10,6 +9,9 @@ ZIP_GRID_CLASS = "trail-grid"
 
 MATCH_CHAR = ' %'
 
+SPACE_CHAR = ' '
+NEW_LINE_CHAR = '\n'
+PATH_CHAR = '■'
 WALL_LEFT_RIGHT = '|'
 WALL_TOP_BOTTOM = '—'
 UP = '↑'
@@ -56,33 +58,48 @@ class Configuration:
         result = ''
         for row in range(self.grid_size):
             for col in range(self.grid_size):
-                result += str(self.dots.get(Position(row, col))).ljust(3, ' ') if Position(row, col) in self.dots else MATCH_CHAR + str(row * self.grid_size + col) + ' '
-                if col < self.grid_size - 1:
-                    if self.adjacency_matrix[row * self.grid_size + col][row * self.grid_size + col + 1] == 0:
-                        result += WALL_LEFT_RIGHT
-                    else:
-                        result += ' '
+                index = row * self.grid_size + col
+                current_position = Position(row, col)
+
+                next_char = '.'
+                if current_position in self.dots:
+                    next_char = self.dots[current_position]
+                elif current_position in self.path:
+                    next_char = PATH_CHAR
+
+                result += str(next_char).ljust(2, SPACE_CHAR)
+
+                right_position = Position(row, col + 1) if col < self.grid_size - 1 else None
+                if right_position:
+                    right_char = SPACE_CHAR
+                    if self.adjacency_matrix[index][index + 1] == 1 \
+                            and abs((self.path.index(current_position) if current_position in self.path else -1) - (self.path.index(right_position) if right_position in self.path else -1)) == 1:
+                        right_char = PATH_CHAR
+                    elif self.adjacency_matrix[index][index + 1] == 0:
+                        right_char = WALL_LEFT_RIGHT
+
+                    result += right_char + SPACE_CHAR
             if row < self.grid_size - 1:
-                result += '\n'
+                result += NEW_LINE_CHAR
                 for col in range(self.grid_size):
-                    if self.adjacency_matrix[row * self.grid_size + col][(row + 1) * self.grid_size + col] == 0:
-                        result += WALL_TOP_BOTTOM
+                    index = row * self.grid_size + col
+                    if self.adjacency_matrix[index][index + self.grid_size] == 0:
+                        result += SPACE_CHAR + WALL_TOP_BOTTOM
                     else:
-                        result += ' '
-            result += '\n'
+                        result += SPACE_CHAR + SPACE_CHAR
+                    result += SPACE_CHAR + SPACE_CHAR
+            result += NEW_LINE_CHAR
 
         for i in range(1, len(self.path)):
-            symbol = '■'
-            if self.path[i].row == self.path[i - 1].row:
-                symbol = RIGHT if self.path[i].col == self.path[i - 1].col + 1 else LEFT
-            elif self.path[i].col == self.path[i - 1].col:
+            if self.path[i].col == self.path[i - 1].col:
                 symbol = DOWN if self.path[i].row == self.path[i - 1].row + 1 else UP
+                lines = result.split(NEW_LINE_CHAR)
+                line_index = (self.path[i].row * 2) + (1 if symbol == UP else -1)
+                char_index = self.path[i].col * 4
+                new_line = lines[line_index][:char_index] + PATH_CHAR + lines[line_index][char_index + 1:]
+                lines[line_index] = new_line
+                result = NEW_LINE_CHAR.join(lines)
 
-            index = self.path[i].row * self.grid_size + self.path[i].col
-            regex_str = MATCH_CHAR + str(index) + ' '
-            result = re.sub(regex_str, symbol + '  ', result)
-
-        result = re.sub(r' \%\d+', '■ ', result).strip()
         return result
 
     def next_configuration_helper(self, new_location):
