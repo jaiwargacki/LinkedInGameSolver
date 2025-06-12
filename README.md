@@ -10,6 +10,13 @@ This repo provides functionality to reach out to LinkedIn for today's game and s
 🟪⬜🟪🟦🟦⬜⬜🟨 &emsp; &emsp; &emsp;🌙 ☀️ ☀️ 🌙 🌙 ☀️ \
 🟪🟪🟪🟦🟦🟨🟨🟨
 
+⬜⬜⬜⬜⬜⬜ \
+⬜2️⃣⬜⬜6️⃣⬜ \
+⬜⬜⬜⬜⬜⬜ \
+1️⃣⬜4️⃣7️⃣⬜5️⃣ \
+⬜⬜⬜⬜⬜⬜ \
+3️⃣⬜⬜⬜⬜8️⃣
+
 ### Usage
 ```
 usage: solver.py [-h] --game {zip,queens,tango,pinpoint,crossclimb}
@@ -23,6 +30,5 @@ options:
 ```
 
 ## To be completed..
-- [ ] Zip functionality
 - [ ] Pinpoint functionality
 - [ ] Crossclimb functionality
