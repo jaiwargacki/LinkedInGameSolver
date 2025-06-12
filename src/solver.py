@@ -2,6 +2,7 @@ import argparse
 
 from queens_solver import solve_queens
 from tango_solver import solve_tango
+from zip_solver import solve_zip
 
 def initialize_parser():
     parser = argparse.ArgumentParser(description="Solve LinkedIn Game")
@@ -19,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     if args.game == "zip":
-        print("Game 'zip' is not implemented yet.")
+        solve_zip()
     elif args.game == "queens":
         solve_queens()
     elif args.game == "tango":
