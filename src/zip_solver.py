@@ -10,7 +10,8 @@ ZIP_GRID_CLASS = "trail-grid"
 
 MATCH_CHAR = ' %'
 
-WALL = 'W'
+WALL_LEFT_RIGHT = '|'
+WALL_TOP_BOTTOM = '—'
 UP = '↑'
 DOWN = '↓'
 LEFT = '←'
@@ -56,6 +57,18 @@ class Configuration:
         for row in range(self.grid_size):
             for col in range(self.grid_size):
                 result += str(self.dots.get(Position(row, col))).ljust(3, ' ') if Position(row, col) in self.dots else MATCH_CHAR + str(row * self.grid_size + col) + ' '
+                if col < self.grid_size - 1:
+                    if self.adjacency_matrix[row * self.grid_size + col][row * self.grid_size + col + 1] == 0:
+                        result += WALL_LEFT_RIGHT
+                    else:
+                        result += ' '
+            if row < self.grid_size - 1:
+                result += '\n'
+                for col in range(self.grid_size):
+                    if self.adjacency_matrix[row * self.grid_size + col][(row + 1) * self.grid_size + col] == 0:
+                        result += WALL_TOP_BOTTOM
+                    else:
+                        result += ' '
             result += '\n'
 
         for i in range(1, len(self.path)):
@@ -130,7 +143,11 @@ def scrape_linked_in() -> Configuration:
         if number_divs:
             configuration.add_dot(int(number_divs[0].get_attribute('innerHTML').strip()), Position(row, col))
 
-        # TODO: handle walls
+        wall_helper = [['right', 0, 1], ['left', 0, -1], ['up', 1, 0], ['down', -1, 0]] # TODO: need to test up and down walls
+        for wall in wall_helper:
+            wall_elements = div.find_elements(By.CLASS_NAME, f'trail-cell-wall--{wall[0]}')
+            if wall_elements:
+                configuration.add_wall(Position(row, col), Position(row + wall[1], col + wall[2]))
 
         col += 1
         if col >= grid_size:
