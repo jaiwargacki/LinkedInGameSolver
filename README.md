@@ -22,6 +22,10 @@ options:
       'pinpoint', or 'crossclimb'.
 ```
 
+# Dependencies
+- Python3
+- [llama_cpp](https://github.com/ggml-org/llama.cpp)
+- locally downloaded llama model. 
+
 ## To be completed..
-- [ ] Pinpoint functionality
 - [ ] Crossclimb functionality

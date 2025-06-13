@@ -3,6 +3,7 @@ import argparse
 from queens_solver import solve_queens
 from tango_solver import solve_tango
 from zip_solver import solve_zip
+from pinpoint_solver import solve_pinpoint
 
 def initialize_parser():
     parser = argparse.ArgumentParser(description="Solve LinkedIn Game")
@@ -26,7 +27,7 @@ def main():
     elif args.game == "tango":
         solve_tango()
     elif args.game == "pinpoint":
-        print("Game 'pinpoint' is not implemented yet.")
+        solve_pinpoint()
     elif args.game == "crossclimb":
         print("Game 'crossclimb' is not implemented yet.")
     else:
